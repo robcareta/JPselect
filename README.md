@@ -159,6 +159,81 @@ selectivity bias is visible at a glance: here, `labor` and `water` look
 significantly risk-decreasing only in the uncorrected (teal) spec,
 matching the headline finding of the paper.
 
+## Methodology
+
+`JPselect` estimates production functions in two interlocking pieces —
+a *mean* and a *variance* — while correcting for the bias that arises
+when farmers choose what to produce.
+
+### The Just-Pope production function
+
+Just and Pope (1978) decompose output into a deterministic mean plus a
+stochastic component whose **magnitude itself depends on inputs**:
+
+$$y_l = f(\mathbf{x}, \boldsymbol{\beta}_l) + h(\mathbf{x}, \boldsymbol{\xi}_l)\,\eta_l, \qquad \eta_l \sim N(0, 1).$$
+
+- $f(\cdot)$ is the **mean function** — how inputs map to expected
+  output.
+- $h(\cdot)$ is the **risk** (variance) **function** — how inputs map
+  to output variability. Negative coefficients in $h$ mean an input is
+  *risk-decreasing*; positive ones mean *risk-increasing*.
+
+The risk function is the headline output: it tells whether labour,
+water, fertiliser, etc. *reduce* or *amplify* yield uncertainty.
+
+### Why crop choice creates a selectivity problem
+
+Producers choose among $L$ candidate crops by comparing expected
+profits. Whether a farm specialises in vegetables vs. cereals depends
+partly on observables (soil, climate, water access) and partly on
+**unobservables** correlated with productivity. Estimating the
+production function $f$ on the chosen sub-sample alone therefore biases
+the estimates — a textbook Heckman problem.
+
+### The Heckman correction
+
+For each candidate crop, a probit predicts the choice indicator $D_l$:
+
+$$D_l = \mathbf{1}\big[g(\mathbf{z}, \boldsymbol{\lambda}_l) + v_l > 0\big],$$
+
+and the **Inverse Mills Ratio** is computed as
+
+$$M_l = \frac{\phi(g(\mathbf{z}, \hat{\boldsymbol{\lambda}}_l))}{\Phi(g(\mathbf{z}, \hat{\boldsymbol{\lambda}}_l))},$$
+
+where $\phi$ and $\Phi$ are the standard-normal pdf and cdf. Adding
+$M_l$ as a regressor in the production function absorbs the average
+unobserved "productivity" of the selected sample, making the remaining
+coefficients consistent.
+
+### The three estimation steps
+
+| Step | What is estimated | Function |
+|---|---|---|
+| 1 | Probit on $D_l$, then compute $M_l$ | `estimate_selection()` |
+| 2 | Mean fn: $y_l = f(\mathbf{x},\boldsymbol{\beta}_l) + \sigma_l M_l + w_l$ with $f$ linear-quadratic | `estimate_mean_function()` |
+| 3 | Risk fn via $\log\|\hat w_l\| = \xi_0 + \sum_j \xi_j \log x_j + \log\eta_l$ (Cobb-Douglas $h$) | `estimate_risk_function()` |
+
+Step 2 fits the **linear-quadratic mean function**
+
+$$f(\mathbf{x}) = \beta_0 + \sum_j \beta_j x_j + \sum_j \beta_{2j} x_j^2 + \sum_{j < k} \beta_{jk} x_j x_k.$$
+
+Step 3 fits the **Cobb-Douglas risk function** $h(\mathbf{x}) = \xi_0
+\prod_j x_j^{\xi_j}$, so each coefficient $\xi_j$ is the **variance
+elasticity** of input $j$: a 1% rise in the input changes output
+variance by $\xi_j$%. Negative $\xi_j$ → risk-decreasing input;
+positive $\xi_j$ → risk-increasing.
+
+### Why the with-vs-without comparison matters
+
+If selectivity bias is present ($\sigma_l \neq 0$ in Step 2), the
+Step-3 risk-function coefficients estimated **without** the Mill's
+ratio are biased. Koundouri & Nauges' main finding is that ignoring
+selectivity can flip the sign or kill the significance of
+risk-function coefficients — exactly the gap that `print(fit)` and
+`plot(fit)` make visible side by side. The Mill's ratio coefficient
+$\sigma_l$ in Step 2 is itself a direct test for selection bias: if
+it's significant, the corrected column is the one you should report.
+
 ## What the package does
 
 | Step | Function | Output |
