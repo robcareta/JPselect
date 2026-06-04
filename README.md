@@ -17,7 +17,7 @@ remotes::install_github("robcareta/JPselect")
 ## Problem & approach
 
 When farmers choose what to grow, that choice depends on
-characteristics — soil quality, water access, farming experience — that
+characteristics (soil quality, water access, farming experience) that
 also affect productivity. Estimating a production function on the
 selected sub-sample (e.g., just the vegetable growers) therefore mixes
 the technological relationship between inputs and output with the
@@ -31,13 +31,13 @@ disentangles these two effects:
 1. A **probit** on crop choice yields an Inverse Mills Ratio that
    summarises the unobserved drivers of selection.
 2. A **Just-Pope mean production function** is fit on the selected
-   sample with the Mill's ratio included as a regressor — purging the
-   selection bias from the mean equation.
+   sample with the Mill's ratio included as a regressor. This purges
+   the selection bias from the mean equation.
 3. A **Cobb-Douglas risk (variance) function** is fit on the absolute
    residuals from Step 2, telling you which inputs amplify or dampen
    output variance.
 
-The headline of the paper — and of this package — is that **skipping
+The headline of the paper (and of this package) is that **skipping
 the Heckman correction can flip the sign or kill the significance** of
 risk-function coefficients. `JPselect` runs both specifications and
 shows them side by side so you can see the bias directly.
@@ -49,7 +49,7 @@ The math, equations, and exact functional forms live in
 
 > **Note:** The example below uses `simulate_kiti_data()`, a **synthetic**
 > 239-farm dataset whose marginals roughly match Table 1 of Koundouri &
-> Nauges (2005). It is intended for demonstrating the methodology only —
+> Nauges (2005). It is intended for demonstrating the methodology only;
 > it is **not** the original Cyprus data and is not meant to reproduce
 > the paper's exact point estimates. To use real data, pass any data
 > frame with the appropriate columns to `jp_fit()`.
@@ -119,7 +119,7 @@ Selection-bias test (Mill's ratio in the mean function):
 
 ### What `summary(fit)` looks like
 
-`summary(fit)` prints all three stages of the procedure end-to-end —
+`summary(fit)` prints all three stages of the procedure end-to-end:
 the probit selection equation (Step 1), the linear-quadratic mean
 production function with the Mill's ratio (Step 2), and the
 with/without selectivity comparison for the risk function (Step 3).
@@ -184,7 +184,7 @@ Adjusted R-squared: 0.964
 
 ![Risk-function coefficients: with vs. without selectivity correction](man/figures/README-risk-plot.png)
 
-Each input appears twice — once estimated with the Heckman correction
+Each input appears twice, once estimated with the Heckman correction
 (red) and once without (teal). When the two estimates disagree the
 selectivity bias is visible at a glance: here, `labor` and `water` look
 significantly risk-decreasing only in the uncorrected (teal) spec,
@@ -199,9 +199,9 @@ stochastic component whose **magnitude itself depends on inputs**:
 
 $$y_l = f(\mathbf{x}, \boldsymbol{\beta}_l) + h(\mathbf{x}, \boldsymbol{\xi}_l)\,\eta_l, \qquad \eta_l \sim N(0, 1).$$
 
-- $f(\cdot)$ is the **mean function** — how inputs map to expected
+- $f(\cdot)$ is the **mean function**, which maps inputs to expected
   output.
-- $h(\cdot)$ is the **risk** (variance) **function** — how inputs map
+- $h(\cdot)$ is the **risk** (variance) **function**, which maps inputs
   to output variability. Negative coefficients in $h$ mean an input is
   *risk-decreasing*; positive ones mean *risk-increasing*.
 
@@ -215,7 +215,7 @@ profits. Whether a farm specialises in vegetables vs. cereals depends
 partly on observables (soil, climate, water access) and partly on
 **unobservables** correlated with productivity. Estimating the
 production function $f$ on the chosen sub-sample alone therefore biases
-the estimates — a textbook Heckman problem.
+the estimates. This is a textbook Heckman problem.
 
 ### The Heckman correction
 
@@ -256,7 +256,7 @@ If selectivity bias is present ($\sigma_l \neq 0$ in Step 2), the
 Step-3 risk-function coefficients estimated **without** the Mill's
 ratio are biased. Koundouri & Nauges' main finding is that ignoring
 selectivity can flip the sign or kill the significance of
-risk-function coefficients — exactly the gap that `print(fit)` and
+risk-function coefficients, exactly the gap that `print(fit)` and
 `plot(fit)` make visible side by side. The Mill's ratio coefficient
 $\sigma_l$ in Step 2 is itself a direct test for selection bias: if
 it's significant, the corrected column is the one you should report.
@@ -279,8 +279,8 @@ flags inputs whose conclusion actually changes between specifications.
 ## Standard errors
 
 Step 3 SEs come from a 500-replication nonparametric bootstrap that
-resamples the **full pipeline** — probit, IMR, mean function, residuals,
-risk function — on every replication, so upstream parameter uncertainty
+resamples the **full pipeline** (probit, IMR, mean function, residuals,
+risk function) on every replication, so upstream parameter uncertainty
 propagates correctly. Set `bootstrap_reps` lower for quicker runs.
 
 ## Reproducing the paper's tables
