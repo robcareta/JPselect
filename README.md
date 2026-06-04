@@ -51,6 +51,51 @@ jp_export(fit, "results.tex")     # booktabs tables for a paper
 jp_export(fit, "results_csv/")    # one CSV per table
 ```
 
+### What `print(fit)` looks like
+
+```
+Just-Pope production function with Heckman selection
+Koundouri & Nauges (2005) three-step procedure
+-------------------------------------------------------
+  Selection equation : vegetables ~ rainfall + irrigated + dist_town + dist_coast + experience
+  Output             : revenue
+  Inputs             : fertilizers, pesticides, labor, water
+  Sample             : 239 total, 95 selected (vegetables == 1)
+  Bootstrap reps     : 500
+
+Risk function coefficients (variance elasticities):
+       Input Coef_with SE_with t_with Coef_without SE_without t_without
+ fertilizers     0.057   0.074  0.766        0.013      0.065     0.202
+  pesticides     0.007   0.075  0.089       -0.018      0.072    -0.242
+       labor    -0.107   0.067 -1.588       -0.154      0.066    -2.331
+       water    -0.046   0.071 -0.648       -0.106      0.048    -2.206
+
+-------------------------------------------------------
+Interpretation
+-------------------------------------------------------
+At p < 0.10, with selectivity correction:
+  Risk-DECREASING inputs : (none)
+  Risk-INCREASING inputs : (none)
+
+Does selectivity correction change the conclusion?
+  labor : significant without correction (p=0.022) but NOT significant once corrected (p=0.116)
+  water : significant without correction (p=0.030) but NOT significant once corrected (p=0.519)
+
+Selection-bias test (Mill's ratio in the mean function):
+  coef = +0.527, p = 0.036 -- selection bias DETECTED.
+  Prefer the 'with correction' column above.
+```
+
+### What `plot(fit)` looks like
+
+![Risk-function coefficients: with vs. without selectivity correction](man/figures/README-risk-plot.png)
+
+Each input appears twice — once estimated with the Heckman correction
+(red) and once without (teal). When the two estimates disagree the
+selectivity bias is visible at a glance: here, `labor` and `water` look
+significantly risk-decreasing only in the uncorrected (teal) spec,
+matching the headline finding of the paper.
+
 ## What the package does
 
 | Step | Function | Output |

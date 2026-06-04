@@ -16,11 +16,12 @@ ChileCensusAg/
 # Copyrighted reference PDF (JSTOR) - do not redistribute
 Koundouri-ProductionFunctionEstimation-2005.pdf
 
-# Example output written by inst/examples/*.R when run locally
-figures/
-tables/
-chile_results/
-exports/
+# Example output written by inst/examples/*.R when run locally.
+# Anchor with leading slash so man/figures/ (README assets) is NOT ignored.
+/figures/
+/tables/
+/chile_results/
+/exports/
 
 # OS / editor cruft
 .DS_Store
