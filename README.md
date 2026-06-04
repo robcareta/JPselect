@@ -9,18 +9,9 @@ sample-selection bias from crop choice.
 
 ## Installation
 
-From GitHub (replace `YOUR_GITHUB_USERNAME` with your handle once the
-repo is live):
-
 ```r
 # install.packages("remotes")
 remotes::install_github("robcareta/JPselect")
-```
-
-From a local clone of the repo:
-
-```r
-install.packages(".", repos = NULL, type = "source")
 ```
 
 ## Quick start
