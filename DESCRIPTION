@@ -1,0 +1,32 @@
+Package: JPselect
+Type: Package
+Title: Just-Pope Production Functions with Heckman Selectivity Correction
+Version: 0.1.0
+Authors@R: person(given = "Roberto", family = "Cardenas Retamal",
+                  email = "roberto.cardenasret@gmail.com",
+                  role = c("aut", "cre"))
+Description: Estimate Just-Pope (1978, 1979) stochastic production functions
+    with a two-step Heckman (1979) correction for sample selection in
+    crop choice, following Koundouri and Nauges (2005, JARE 30(3):597-608).
+    Provides the three-step procedure end-to-end: (1) probit selection
+    equation and inverse Mills ratio, (2) linear-quadratic mean production
+    function, (3) Cobb-Douglas variance (risk) function on log absolute
+    residuals. Standard errors are obtained by a full-pipeline bootstrap.
+    Convenience methods print, summarise, and plot the with-vs-without
+    selectivity comparison that is the headline result of the paper.
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.3.3
+Depends: R (>= 4.0.0)
+Imports:
+    stats,
+    utils,
+    sandwich,
+    ggplot2
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    openxlsx
+URL: https://github.com/
+BugReports: https://github.com/
