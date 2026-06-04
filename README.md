@@ -14,6 +14,37 @@ sample-selection bias from crop choice.
 remotes::install_github("robcareta/JPselect")
 ```
 
+## Problem & approach
+
+When farmers choose what to grow, that choice depends on
+characteristics — soil quality, water access, farming experience — that
+also affect productivity. Estimating a production function on the
+selected sub-sample (e.g., just the vegetable growers) therefore mixes
+the technological relationship between inputs and output with the
+self-selection of farms into crops. The result is **biased** estimates
+of how inputs affect both mean output **and** its variability.
+
+`JPselect` implements the three-step procedure of
+[Koundouri & Nauges (2005)](https://www.jstor.org/stable/40987295) that
+disentangles these two effects:
+
+1. A **probit** on crop choice yields an Inverse Mills Ratio that
+   summarises the unobserved drivers of selection.
+2. A **Just-Pope mean production function** is fit on the selected
+   sample with the Mill's ratio included as a regressor — purging the
+   selection bias from the mean equation.
+3. A **Cobb-Douglas risk (variance) function** is fit on the absolute
+   residuals from Step 2, telling you which inputs amplify or dampen
+   output variance.
+
+The headline of the paper — and of this package — is that **skipping
+the Heckman correction can flip the sign or kill the significance** of
+risk-function coefficients. `JPselect` runs both specifications and
+shows them side by side so you can see the bias directly.
+
+The math, equations, and exact functional forms live in
+[Methodology](#methodology) below.
+
 ## Quick start
 
 > **Note:** The example below uses `simulate_kiti_data()`, a **synthetic**
@@ -160,10 +191,6 @@ significantly risk-decreasing only in the uncorrected (teal) spec,
 matching the headline finding of the paper.
 
 ## Methodology
-
-`JPselect` estimates production functions in two interlocking pieces —
-a *mean* and a *variance* — while correcting for the bias that arises
-when farmers choose what to produce.
 
 ### The Just-Pope production function
 
