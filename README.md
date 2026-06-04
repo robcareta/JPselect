@@ -16,6 +16,13 @@ remotes::install_github("robcareta/JPselect")
 
 ## Quick start
 
+> **Note:** The example below uses `simulate_kiti_data()`, a **synthetic**
+> 239-farm dataset whose marginals roughly match Table 1 of Koundouri &
+> Nauges (2005). It is intended for demonstrating the methodology only —
+> it is **not** the original Cyprus data and is not meant to reproduce
+> the paper's exact point estimates. To use real data, pass any data
+> frame with the appropriate columns to `jp_fit()`.
+
 ```r
 library(JPselect)
 
