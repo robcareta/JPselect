@@ -57,9 +57,23 @@ jp_fit <- function(data,
                    shifter_vars,
                    bootstrap_reps = 500,
                    mean_scale = TRUE,
+                   mean_form = c("linear_quadratic", "quadratic",
+                                 "cobb_douglas"),
+                   risk_form = c("cobb_douglas", "exponential"),
                    seed = NULL) {
 
   call <- match.call()
+  # Friendly translog guard before match.arg() gives a generic error.
+  bad <- intersect(c(mean_form, risk_form), "translog")
+  if (length(bad) > 0) {
+    stop("translog is not supported because it implies a multiplicative ",
+         "interaction between the mean and variance functions, which ",
+         "breaks the additive identification structure that Just-Pope ",
+         "requires. See Koundouri & Nauges (2005, footnote 5).",
+         call. = FALSE)
+  }
+  mean_form <- match.arg(mean_form)
+  risk_form <- match.arg(risk_form)
   if (!is.null(seed)) set.seed(seed)
 
   # ----- Step 1: probit selection ----------------------------------------
@@ -75,6 +89,7 @@ jp_fit <- function(data,
     input_vars   = input_vars,
     shifter_vars = shifter_vars,
     imr_var      = imr_col,
+    form         = mean_form,
     mean_scale   = mean_scale
   )
 
@@ -93,6 +108,7 @@ jp_fit <- function(data,
     residuals      = mf_with$residuals,
     input_data     = mf_with$scaled_data,
     input_vars     = input_vars,
+    form           = risk_form,
     bootstrap_reps = bootstrap_reps,
     full_data      = data,
     selection_args = sel_args,
@@ -104,6 +120,7 @@ jp_fit <- function(data,
     residuals      = mf_without$residuals,
     input_data     = mf_without$scaled_data,
     input_vars     = input_vars,
+    form           = risk_form,
     bootstrap_reps = bootstrap_reps,
     seed           = if (is.null(seed)) NULL else seed + 2
   )
@@ -123,6 +140,8 @@ jp_fit <- function(data,
         shifter_vars         = shifter_vars,
         imr_var              = imr_col,
         bootstrap_reps       = bootstrap_reps,
+        mean_form            = mean_form,
+        risk_form            = risk_form,
         n_total              = nrow(data),
         n_selected           = nrow(selected)
       ),

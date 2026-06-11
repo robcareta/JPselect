@@ -1,22 +1,37 @@
 #' Estimate the Just-Pope variance (risk) function
 #'
 #' Step 3 of Koundouri & Nauges (2005). Given mean-function residuals,
-#' fit the Cobb-Douglas risk function in logs,
-#' \deqn{\log|\hat{w}| = \xi_0 + \sum_j \xi_j \log(x_j) + \log(\eta).}
+#' fits one of two functional forms for the variance function `h(x)`:
+#'
+#' \itemize{
+#'   \item `"cobb_douglas"` (default): \eqn{h(x) = \xi_0 \prod_j x_j^{\xi_j}},
+#'     estimated via \eqn{\log|\hat w| = \xi_0 + \sum_j \xi_j \log x_j + \log\eta}.
+#'     Coefficients are **variance elasticities** (a 1% rise in input \eqn{j}
+#'     changes output variance by \eqn{\xi_j}%). Requires strictly positive
+#'     inputs.
+#'   \item `"exponential"`: \eqn{h(x) = \exp(\xi_0 + \sum_j \xi_j x_j)},
+#'     estimated via \eqn{\log|\hat w| = \xi_0 + \sum_j \xi_j x_j + \log\eta}.
+#'     Coefficients are **variance semi-elasticities** (a 1-unit rise in
+#'     input \eqn{j} changes log variance by \eqn{\xi_j}). Handles zero
+#'     inputs because no log transformation is applied to \eqn{x}. See
+#'     Saha, Havenner & Talpaz (1997), Tveterås (1999).
+#' }
+#'
 #' Standard errors default to a 500-replication nonparametric bootstrap,
 #' matching the paper. If `full_data`, `selection_args`, and `mean_args` are
 #' supplied, the bootstrap resamples the entire pipeline (probit -> IMR ->
 #' mean function -> residuals -> risk function) on each replication so
 #' upstream parameter uncertainty propagates into the risk-function SEs.
-#' Without those, the bootstrap resamples only the risk-function rows
-#' (faster, but ignores Steps 1-2 uncertainty).
 #'
 #' @param residuals Numeric vector of mean-function residuals (Step 2).
 #' @param input_data Data frame aligned with `residuals`, holding input
 #'   columns named in `input_vars`.
 #' @param input_vars Character vector. Inputs to enter the risk function.
-#' @param positive_only Logical. Drop rows with non-positive residuals or
-#'   inputs before logging (default `TRUE`).
+#' @param form Functional form: `"cobb_douglas"` (default) or
+#'   `"exponential"`. See *Details*.
+#' @param positive_only Logical. Drop rows with zero residuals before
+#'   estimation (default `TRUE`). Under `form = "cobb_douglas"` also drops
+#'   rows with non-positive inputs (needed for the log transformation).
 #' @param bootstrap_reps Integer. Bootstrap replications (default 500;
 #'   set 0 for OLS SEs only).
 #' @param full_data,selection_args,mean_args Optional. When all three are
@@ -25,7 +40,8 @@
 #' @param seed Optional integer seed.
 #'
 #' @return List with the fitted `lm` object, a coefficient table, the
-#'   bootstrap coefficient matrix, and the post-filter sample size.
+#'   bootstrap coefficient matrix, the post-filter sample size, and the
+#'   functional form actually used.
 #' @importFrom stats as.formula lm coef sd pt vcov
 #' @export
 #' @examples
@@ -38,12 +54,14 @@
 #'               input_vars   = c("fertilizers","pesticides","labor","water"),
 #'               shifter_vars = c("machinery","rainfall","irrigated",
 #'                                "dist_town","dist_coast","experience"),
-#'               bootstrap_reps = 100)
+#'               bootstrap_reps = 100,
+#'               risk_form    = "exponential")
 #' fit$risk_with$coefficients
 #' }
 estimate_risk_function <- function(residuals,
                                    input_data,
                                    input_vars,
+                                   form = c("cobb_douglas", "exponential"),
                                    positive_only = TRUE,
                                    bootstrap_reps = 500,
                                    full_data = NULL,
@@ -51,6 +69,7 @@ estimate_risk_function <- function(residuals,
                                    mean_args = NULL,
                                    seed = NULL) {
 
+  form <- match.arg(form)
   if (!is.null(seed)) set.seed(seed)
   stopifnot(length(residuals) == nrow(input_data))
   missing <- setdiff(input_vars, names(input_data))
@@ -61,14 +80,20 @@ estimate_risk_function <- function(residuals,
   df <- cbind(.w = residuals, input_data[, input_vars, drop = FALSE])
 
   if (positive_only) {
-    keep <- df$.w != 0 & rowSums(input_data[, input_vars, drop = FALSE] <= 0) == 0
+    keep <- df$.w != 0
+    if (form == "cobb_douglas") {
+      keep <- keep & rowSums(input_data[, input_vars, drop = FALSE] <= 0) == 0
+    }
     df <- df[keep, , drop = FALSE]
   }
 
   df$.lnw <- log(abs(df$.w))
-  for (v in input_vars) df[[paste0(".ln_", v)]] <- log(df[[v]])
-
-  rhs <- paste0(".ln_", input_vars)
+  if (form == "cobb_douglas") {
+    for (v in input_vars) df[[paste0(".ln_", v)]] <- log(df[[v]])
+    rhs <- paste0(".ln_", input_vars)
+  } else {                                # exponential
+    rhs <- input_vars
+  }
   fml <- stats::as.formula(paste(".lnw ~", paste(rhs, collapse = " + ")))
   model <- stats::lm(fml, data = df)
 
@@ -84,6 +109,7 @@ estimate_risk_function <- function(residuals,
       selection_args  = selection_args,
       mean_args       = mean_args,
       risk_input_vars = input_vars,
+      risk_form       = form,
       positive_only   = positive_only,
       reps            = bootstrap_reps,
       coef_names      = names(est)
@@ -123,15 +149,16 @@ estimate_risk_function <- function(residuals,
     model          = model,
     coefficients   = coef_table,
     boot_estimates = boot_mat,
-    n_used         = nrow(df)
+    n_used         = nrow(df),
+    form           = form
   )
 }
 
 # Internal: full-pipeline bootstrap. Resamples full_data, re-runs probit
 # -> IMR -> mean function -> risk function on each draw.
 .boot_full_pipeline <- function(full_data, selection_args, mean_args,
-                                risk_input_vars, positive_only, reps,
-                                coef_names) {
+                                risk_input_vars, risk_form,
+                                positive_only, reps, coef_names) {
 
   boot_mat <- matrix(NA_real_, nrow = reps, ncol = length(coef_names),
                      dimnames = list(NULL, coef_names))
@@ -160,16 +187,24 @@ estimate_risk_function <- function(residuals,
     res_b <- mf$residuals
     inp_b <- mf$scaled_data[, risk_input_vars, drop = FALSE]
     if (positive_only) {
-      keep <- res_b != 0 & rowSums(inp_b <= 0) == 0
+      keep <- res_b != 0
+      if (risk_form == "cobb_douglas") {
+        keep <- keep & rowSums(inp_b <= 0) == 0
+      }
       res_b <- res_b[keep]
       inp_b <- inp_b[keep, , drop = FALSE]
     }
     if (length(res_b) < length(coef_names) + 2) next
 
     lnw <- log(abs(res_b))
-    Xln <- log(inp_b)
-    names(Xln) <- paste0(".ln_", risk_input_vars)
-    fit_b <- try(stats::lm(lnw ~ ., data = cbind(lnw = lnw, Xln)),
+    if (risk_form == "cobb_douglas") {
+      Xb <- log(inp_b)
+      names(Xb) <- paste0(".ln_", risk_input_vars)
+    } else {                              # exponential
+      Xb <- inp_b
+      names(Xb) <- risk_input_vars
+    }
+    fit_b <- try(stats::lm(lnw ~ ., data = cbind(lnw = lnw, Xb)),
                  silent = TRUE)
     if (inherits(fit_b, "try-error")) next
     cb <- stats::coef(fit_b)

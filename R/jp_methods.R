@@ -13,12 +13,50 @@ print.jpfit <- function(x, digits = 3, alpha = 0.10, ...) {
   cat(sprintf("  Sample             : %d total, %d selected (%s == 1)\n",
               cfg$n_total, cfg$n_selected, cfg$selection_var))
   cat(sprintf("  Bootstrap reps     : %d\n", cfg$bootstrap_reps))
-  cat("\nRisk function coefficients (variance elasticities):\n")
+  cat(sprintf("  Mean-fn form       : %s\n",
+              .mean_form_label(cfg$mean_form)))
+  cat(sprintf("  Risk-fn form       : %s\n",
+              .risk_form_label(cfg$risk_form)))
+  cat(sprintf("\nRisk function coefficients (%s):\n",
+              .risk_coef_label(cfg$risk_form)))
   tab <- .risk_compare_table(x, digits = digits)
   print(tab, row.names = FALSE)
   cat("\n")
   .print_jpfit_interpretation(x, alpha = alpha)
   invisible(x)
+}
+
+# Labels for the functional forms.
+.mean_form_label <- function(form) {
+  if (is.null(form) || form == "linear_quadratic") {
+    "Linear-quadratic (linear + squared + interactions)"
+  } else if (form == "quadratic") {
+    "Quadratic (linear + squared, no interactions)"
+  } else if (form == "cobb_douglas") {
+    "Cobb-Douglas (log-log)"
+  } else {
+    form
+  }
+}
+
+.risk_form_label <- function(form) {
+  if (is.null(form) || form == "cobb_douglas") {
+    "Cobb-Douglas (log inputs)"
+  } else if (form == "exponential") {
+    "Exponential (level inputs)"
+  } else {
+    form
+  }
+}
+
+.risk_coef_label <- function(form) {
+  if (is.null(form) || form == "cobb_douglas") {
+    "variance elasticities"
+  } else if (form == "exponential") {
+    "variance semi-elasticities"
+  } else {
+    "coefficients"
+  }
 }
 
 # Narrative interpretation of risk-function results: which inputs are
@@ -251,9 +289,10 @@ coef.jpfit <- function(object, which = c("risk","mean","selection"),
     ggplot2::geom_point(position = ggplot2::position_dodge(width = 0.5)) +
     ggplot2::labs(
       title    = "Risk function: with vs. without selectivity correction",
-      subtitle = sprintf("Selected group: %s == 1 (n = %d)",
-                         x$config$selection_var, x$config$n_selected),
-      x        = "Variance elasticity",
+      subtitle = sprintf("Selected group: %s == 1 (n = %d). Form: %s.",
+                         x$config$selection_var, x$config$n_selected,
+                         .risk_form_label(x$config$risk_form)),
+      x        = tools::toTitleCase(.risk_coef_label(x$config$risk_form)),
       y        = NULL,
       colour   = NULL,
       caption  = sprintf("Bars are %.0f%% bootstrap CIs (%d reps).",
@@ -261,6 +300,65 @@ coef.jpfit <- function(object, which = c("risk","mean","selection"),
                          x$config$bootstrap_reps)
     ) +
     ggplot2::theme_minimal()
+}
+
+# ---------------------------------------------------------------------------
+# Print method for jp_compare() output
+# ---------------------------------------------------------------------------
+
+#' @export
+print.jpcompare <- function(x, digits = 3, ...) {
+  s <- x$summary
+  cf <- x$coefficients
+  if (is.null(s) || nrow(s) == 0) {
+    cat("Empty jpcompare object (no successful fits).\n")
+    return(invisible(x))
+  }
+
+  cat(strrep("=", 70), "\n", sep = "")
+  cat("JPselect: comparison of functional-form specifications\n")
+  cat(strrep("=", 70), "\n", sep = "")
+  cat(sprintf("%d combinations fitted on n = %d selected farms.\n\n",
+              nrow(s), s$n_selected[1]))
+
+  # ----- Summary table -------------------------------------------------
+  cat("SUMMARY (Step 1 + Step 2 diagnostics)\n")
+  sum_df <- data.frame(
+    Combo       = s$combo,
+    Mean_form   = s$mean_form,
+    Risk_form   = s$risk_form,
+    Mean_R2     = sprintf(paste0("%.", digits, "f"), s$mean_adj_r2),
+    IMR_coef    = sprintf(paste0("%+.", digits, "f"), s$imr_coef),
+    IMR_p       = sprintf("%.3f", s$imr_p),
+    Bias_at_10  = ifelse(s$bias_detected, "YES", "no"),
+    stringsAsFactors = FALSE
+  )
+  print(sum_df, row.names = FALSE, right = FALSE)
+
+  # ----- Wide risk-coefficient table -----------------------------------
+  cat("\nRISK FUNCTION COEFFICIENTS (with selectivity correction)\n")
+  inputs <- unique(cf$input)
+  combos <- unique(cf$combo)
+  wide <- data.frame(Input = inputs, stringsAsFactors = FALSE)
+  for (cb in combos) {
+    cells <- character(length(inputs))
+    for (i in seq_along(inputs)) {
+      row <- cf[cf$combo == cb & cf$input == inputs[i], ]
+      if (nrow(row) == 1) {
+        cells[i] <- paste0(sprintf(paste0("%+.", digits, "f"), row$coef),
+                           row$sig)
+      } else {
+        cells[i] <- ""
+      }
+    }
+    wide[[cb]] <- cells
+  }
+  print(wide, row.names = FALSE, right = FALSE)
+
+  cat("\nSignificance: *** p<0.01, ** p<0.05, * p<0.10\n")
+  cat("Risk coefficients are variance elasticities under '*/CD' columns ",
+      "and\nvariance semi-elasticities under '*/Exp' columns.\n", sep = "")
+  invisible(x)
 }
 
 # Avoid R CMD check note about ".data" being undefined.

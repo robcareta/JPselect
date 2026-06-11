@@ -8,6 +8,7 @@ estimate_risk_function(
   residuals,
   input_data,
   input_vars,
+  form = c("cobb_douglas", "exponential"),
   positive_only = TRUE,
   bootstrap_reps = 500,
   full_data = NULL,
@@ -24,8 +25,12 @@ columns named in `input_vars`.}
 
 \item{input_vars}{Character vector. Inputs to enter the risk function.}
 
-\item{positive_only}{Logical. Drop rows with non-positive residuals or
-inputs before logging (default `TRUE`).}
+\item{form}{Functional form: `"cobb_douglas"` (default) or
+`"exponential"`. See *Details*.}
+
+\item{positive_only}{Logical. Drop rows with zero residuals before
+estimation (default `TRUE`). Under `form = "cobb_douglas"` also drops
+rows with non-positive inputs (needed for the log transformation).}
 
 \item{bootstrap_reps}{Integer. Bootstrap replications (default 500;
 set 0 for OLS SEs only).}
@@ -38,19 +43,33 @@ supplied, the full pipeline is rerun on each bootstrap draw. See
 }
 \value{
 List with the fitted `lm` object, a coefficient table, the
-  bootstrap coefficient matrix, and the post-filter sample size.
+  bootstrap coefficient matrix, the post-filter sample size, and the
+  functional form actually used.
 }
 \description{
 Step 3 of Koundouri & Nauges (2005). Given mean-function residuals,
-fit the Cobb-Douglas risk function in logs,
-\deqn{\log|\hat{w}| = \xi_0 + \sum_j \xi_j \log(x_j) + \log(\eta).}
+fits one of two functional forms for the variance function `h(x)`:
+}
+\details{
+\itemize{
+  \item `"cobb_douglas"` (default): \eqn{h(x) = \xi_0 \prod_j x_j^{\xi_j}},
+    estimated via \eqn{\log|\hat w| = \xi_0 + \sum_j \xi_j \log x_j + \log\eta}.
+    Coefficients are **variance elasticities** (a 1% rise in input \eqn{j}
+    changes output variance by \eqn{\xi_j}%). Requires strictly positive
+    inputs.
+  \item `"exponential"`: \eqn{h(x) = \exp(\xi_0 + \sum_j \xi_j x_j)},
+    estimated via \eqn{\log|\hat w| = \xi_0 + \sum_j \xi_j x_j + \log\eta}.
+    Coefficients are **variance semi-elasticities** (a 1-unit rise in
+    input \eqn{j} changes log variance by \eqn{\xi_j}). Handles zero
+    inputs because no log transformation is applied to \eqn{x}. See
+    Saha, Havenner & Talpaz (1997), Tveterås (1999).
+}
+
 Standard errors default to a 500-replication nonparametric bootstrap,
 matching the paper. If `full_data`, `selection_args`, and `mean_args` are
 supplied, the bootstrap resamples the entire pipeline (probit -> IMR ->
 mean function -> residuals -> risk function) on each replication so
 upstream parameter uncertainty propagates into the risk-function SEs.
-Without those, the bootstrap resamples only the risk-function rows
-(faster, but ignores Steps 1-2 uncertainty).
 }
 \examples{
 \dontrun{
@@ -62,7 +81,8 @@ fit <- jp_fit(data = simulate_kiti_data(),
               input_vars   = c("fertilizers","pesticides","labor","water"),
               shifter_vars = c("machinery","rainfall","irrigated",
                                "dist_town","dist_coast","experience"),
-              bootstrap_reps = 100)
+              bootstrap_reps = 100,
+              risk_form    = "exponential")
 fit$risk_with$coefficients
 }
 }

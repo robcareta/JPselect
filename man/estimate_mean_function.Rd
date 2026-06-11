@@ -10,45 +10,67 @@ estimate_mean_function(
   input_vars,
   shifter_vars,
   imr_var = "imr",
+  form = c("linear_quadratic", "quadratic", "cobb_douglas"),
   mean_scale = TRUE
 )
 }
 \arguments{
-\item{data}{Data frame of the selected subsample (`D_l == 1`) containing
-all variables listed below.}
+\item{data}{Data frame of the selected subsample (`D_l == 1`)
+containing all variables listed below.}
 
 \item{output_var}{Character. Name of the output / yield variable.}
 
-\item{input_vars}{Character vector. Variable inputs entering linearly,
-quadratically, and via pairwise interactions.}
+\item{input_vars}{Character vector. Variable inputs.}
 
-\item{shifter_vars}{Character vector. Extra production shifters entering
-the mean function linearly only.}
+\item{shifter_vars}{Character vector. Extra production shifters that
+enter the mean function linearly (in all three forms).}
 
 \item{imr_var}{Character. Name of the Mill's ratio column (default
 "imr").}
 
-\item{mean_scale}{Logical. If `TRUE` (default), mean-scale all variables
-before estimation, as in Table A1 of the paper.}
+\item{form}{Functional form: `"linear_quadratic"` (default),
+`"quadratic"`, or `"cobb_douglas"`. See *Details*.}
+
+\item{mean_scale}{Logical. If `TRUE` (default), mean-scale all
+variables before estimation, as in Table A1 of the paper. Ignored
+under `form = "cobb_douglas"`, where log-scaling makes the
+transformation meaningless.}
 }
 \value{
 A list with the fitted `lm` object, a coefficient table with
   HC1-robust standard errors, the residuals, fitted values, adjusted
-  \eqn{R^2}, the formula used, and the (possibly scaled) data frame.
+  \eqn{R^2}, the formula used, the (possibly scaled) data frame, and
+  the functional form.
 }
 \description{
-Step 2 of Koundouri & Nauges (2005). Fits a linear-quadratic mean
-function in variable inputs (linear, quadratic, and pairwise interaction
-terms) plus extra shifters and the Inverse Mills Ratio. Coefficients are
-obtained by OLS; with the regressors serving as their own instruments,
-GMM point estimates coincide with OLS, and the paper's heteroskedasticity-
-robust GMM standard errors are reproduced via HC1 sandwich variances.
+Step 2 of Koundouri & Nauges (2005). Fits one of three functional
+forms for the mean function `f(x)` plus extra shifters and the
+Inverse Mills Ratio.
 }
 \details{
+\itemize{
+  \item `"linear_quadratic"` (default): linear, quadratic, and pairwise
+    interaction terms in inputs. This is the form used in Koundouri &
+    Nauges (2005). Compatible with additive interaction between the
+    mean and variance functions, the key Just-Pope requirement.
+  \item `"quadratic"`: linear and quadratic terms in inputs, no
+    pairwise interactions. A more parsimonious version, useful when
+    the sample is small.
+  \item `"cobb_douglas"`: log-log specification,
+    \eqn{\log y = \beta_0 + \sum_j \beta_j \log x_j + \text{shifters} + \sigma M + w}.
+    Requires strictly positive output and inputs. Shankar & Nelson
+    (1999) showed that the Cobb-Douglas mean + Cobb-Douglas variance
+    specification is robust to input endogeneity in the JP framework.
+}
+
+Coefficients are obtained by OLS; with the regressors serving as
+their own instruments, GMM point estimates coincide with OLS, and the
+paper's heteroskedasticity-robust GMM standard errors are reproduced
+via HC1 sandwich variances.
+
 If the Mill's ratio column is constant (e.g. all zero for the
-"without selectivity" comparison), the term is dropped from the formula
-before fitting -- otherwise `lm()` would return an NA coefficient and the
-robust vcov dimensions would not match `coef()`.
+"without selectivity" comparison), the term is dropped from the
+formula before fitting.
 }
 \examples{
 farms <- simulate_kiti_data(seed = 1)

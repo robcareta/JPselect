@@ -13,6 +13,8 @@ jp_fit(
   shifter_vars,
   bootstrap_reps = 500,
   mean_scale = TRUE,
+  mean_form = c("linear_quadratic", "quadratic", "cobb_douglas"),
+  risk_form = c("cobb_douglas", "exponential"),
   seed = NULL
 )
 }
