@@ -2,7 +2,7 @@ pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles: {}
-last_built: 2026-07-04T04:04Z
+last_built: 2026-07-04T04:12Z
 urls:
   reference: https://robcareta.github.io/JPselect/reference
   article: https://robcareta.github.io/JPselect/articles
