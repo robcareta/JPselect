@@ -2,7 +2,7 @@ url: https://robcareta.github.io/JPselect/
 
 template:
   bootstrap: 5
-  bootswatch: cosmo
+  bootswatch: pulse
 
 home:
   title: "JPselect: Just-Pope Production Functions with Heckman Selectivity"
