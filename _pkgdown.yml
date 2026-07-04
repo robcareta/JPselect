@@ -27,13 +27,10 @@ reference:
   - jp_compare
 
 - title: S3 methods
-  desc: Printing, summarising, and plotting fitted objects.
+  desc: Extracting coefficients and plotting fitted objects.
   contents:
-  - print.jpfit
-  - summary.jpfit
   - plot.jpfit
   - coef.jpfit
-  - print.jpcompare
 
 - title: Individual stages
   desc: The estimation steps exposed for finer control.
