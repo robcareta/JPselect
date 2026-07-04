@@ -2,13 +2,8 @@
 
 ## Authors
 
-[somatemplate](https://github.com/SomaLogic/somatemplate/) is proudly
-brought to you by:
-
 - **[Roberto Cardenas Retamal](https://robcareta.github.io)**. Author,
   maintainer.
-
-🧬
 
 ## Citation
 
