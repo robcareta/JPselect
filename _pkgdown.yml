@@ -1,8 +1,8 @@
 url: https://robcareta.github.io/JPselect/
 
 template:
-  package: somatemplate
   bootstrap: 5
+  bootswatch: flatly
 
 home:
   title: "JPselect: Just-Pope Production Functions with Heckman Selectivity"
