@@ -20,6 +20,10 @@ navbar:
     right: [search, github]
 
 reference:
+- title: Package overview
+  contents:
+  - JPselect-package
+
 - title: Full pipeline
   desc: Wrappers for the complete three-step procedure with vs. without selectivity correction.
   contents:
