@@ -16,8 +16,19 @@ home:
 
 navbar:
   structure:
-    left:  [reference, articles, news]
+    left:  [intro, articles, reference, news]
     right: [search, github]
+  components:
+    intro:
+      text: Get started
+      href: articles/getting-started.html
+    articles:
+      text: Articles
+      menu:
+      - text: Getting started with JPselect
+        href: articles/getting-started.html
+      - text: "Methodology: Just-Pope with Heckman correction"
+        href: articles/methodology.html
 
 reference:
 - title: Package overview
