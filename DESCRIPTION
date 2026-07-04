@@ -31,3 +31,4 @@ Suggests:
     pkgdown
 URL: https://github.com/robcareta/JPselect, https://robcareta.github.io/JPselect/
 BugReports: https://github.com/robcareta/JPselect/issues
+Config/Needs/website: SomaLogic/somatemplate
