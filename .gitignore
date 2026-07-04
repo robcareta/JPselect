@@ -32,3 +32,6 @@ Thumbs.db
 
 /.quarto/
 **/*.quarto_ipynb
+
+# pkgdown site (built by CI to gh-pages branch)
+docs/

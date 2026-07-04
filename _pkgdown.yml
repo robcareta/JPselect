@@ -1,0 +1,60 @@
+url: https://robcareta.github.io/JPselect/
+
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+
+home:
+  title: "JPselect: Just-Pope Production Functions with Heckman Selectivity"
+  description: >
+    Three-step estimation of Just-Pope stochastic production functions with
+    sample-selection correction. Runs the corrected and uncorrected specifications
+    side by side so the bias in risk-function coefficients is visible directly.
+  links:
+  - text: Report an issue
+    href: https://github.com/robcareta/JPselect/issues
+
+navbar:
+  structure:
+    left:  [reference, articles, news]
+    right: [search, github]
+
+reference:
+- title: Full pipeline
+  desc: Wrappers for the complete three-step procedure with vs. without selectivity correction.
+  contents:
+  - jp_fit
+  - jp_compare
+
+- title: S3 methods
+  desc: Printing, summarising, and plotting fitted objects.
+  contents:
+  - print.jpfit
+  - summary.jpfit
+  - plot.jpfit
+  - coef.jpfit
+  - print.jpcompare
+
+- title: Individual stages
+  desc: The estimation steps exposed for finer control.
+  contents:
+  - estimate_selection
+  - estimate_mean_function
+  - estimate_risk_function
+
+- title: Export
+  desc: Write results to Excel, LaTeX, or CSV for papers and slides.
+  contents:
+  - jp_export
+
+- title: Example and reference data
+  desc: Synthetic and packaged datasets used for demonstration.
+  contents:
+  - simulate_kiti_data
+  - prepare_caf_data
+  - caf2021_docs
+  - caf2021_g2_groups
+
+authors:
+  Roberto Cardenas Retamal:
+    href: https://robcareta.github.io

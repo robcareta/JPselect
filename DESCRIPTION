@@ -27,6 +27,7 @@ Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    openxlsx
-URL: https://github.com/
-BugReports: https://github.com/
+    openxlsx,
+    pkgdown
+URL: https://github.com/robcareta/JPselect, https://robcareta.github.io/JPselect/
+BugReports: https://github.com/robcareta/JPselect/issues
