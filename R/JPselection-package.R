@@ -1,4 +1,4 @@
-#' JPselect: Just-Pope Production Functions with Heckman Selectivity Correction
+#' JPselection: Just-Pope Production Functions with Heckman Selectivity Correction
 #'
 #' Reproduces the three-step estimation procedure of Koundouri & Nauges
 #' (2005, JARE 30(3):597-608) for Just-Pope (1978, 1979) stochastic
@@ -28,6 +28,6 @@
 #' \emph{Econometrica}, 47, 153-161.
 #'
 #' @docType package
-#' @name JPselect-package
-#' @aliases JPselect
+#' @name JPselection-package
+#' @aliases JPselection
 "_PACKAGE"

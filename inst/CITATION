@@ -1,10 +1,10 @@
 bibentry(
   bibtype = "Manual",
-  title   = "JPselect: Just-Pope Production Functions with Heckman Selectivity Correction",
+  title   = "JPselection: Just-Pope Production Functions with Heckman Selectivity Correction",
   author  = person("Roberto", "Cardenas Retamal"),
   year    = "2026",
-  note    = "R package version 0.1.0",
-  url     = "https://github.com/YOUR_GITHUB_USERNAME/JPselect"
+  note    = "R package version 0.2.0",
+  url     = "https://github.com/robcareta/JPselection"
 )
 
 bibentry(
@@ -17,5 +17,5 @@ bibentry(
   volume  = "30",
   number  = "3",
   pages   = "597--608",
-  header  = "JPselect implements the procedure of:"
+  header  = "JPselection implements the procedure of:"
 )

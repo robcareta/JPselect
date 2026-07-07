@@ -1,4 +1,4 @@
-# Empirical application of JPselect to the Chilean Agricultural Census 2021
+# Empirical application of JPselection to the Chilean Agricultural Census 2021
 # (VIII Censo Nacional Agropecuario y Forestal). The folder structure
 # expected by prepare_caf_data() is the one INE actually ships:
 #
@@ -11,7 +11,7 @@
 #   2. jp_fit()            -- 3-step Koundouri-Nauges pipeline
 #   3. summary, plot, jp_export to Excel/LaTeX
 
-library(JPselect)
+library(JPselection)
 library(ggplot2)
 
 data_dir <- "ChileCensusAg/"

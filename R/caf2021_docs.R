@@ -33,11 +33,11 @@ caf2021_docs <- function(which = c("all","dictionary","methodology","questionnai
   which <- match.arg(which)
   paths <- c(
     dictionary    = system.file("extdata", "caf2021_dictionary.xlsx",
-                                package = "JPselect"),
+                                package = "JPselection"),
     methodology   = system.file("extdata", "caf2021_methodology.pdf",
-                                package = "JPselect"),
+                                package = "JPselection"),
     questionnaire = system.file("extdata", "caf2021_questionnaire.pdf",
-                                package = "JPselect")
+                                package = "JPselection")
   )
   missing <- paths == ""
   if (any(missing)) {

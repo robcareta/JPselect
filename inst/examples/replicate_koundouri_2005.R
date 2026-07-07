@@ -1,4 +1,4 @@
-# Replication of Koundouri & Nauges (2005, JARE 30(3):597-608) using JPselect.
+# Replication of Koundouri & Nauges (2005, JARE 30(3):597-608) using JPselection.
 #
 # This script fits the with/without selectivity comparison for both crop
 # groups (vegetables and cereals), prints the same tables shown in the
@@ -11,7 +11,7 @@
 if (!exists("BOOTSTRAP_REPS")) BOOTSTRAP_REPS <- 500
 if (!exists("SEED"))           SEED           <- 42
 
-library(JPselect)
+library(JPselection)
 library(ggplot2)
 
 dir.create("figures", showWarnings = FALSE)

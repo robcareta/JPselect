@@ -1,7 +1,7 @@
-Package: JPselect
+Package: JPselection
 Type: Package
 Title: Just-Pope Production Functions with Heckman Selectivity Correction
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person(given = "Roberto", family = "Cardenas Retamal",
                   email = "roberto.cardenasret@gmail.com",
                   role = c("aut", "cre"))
@@ -29,6 +29,6 @@ Suggests:
     rmarkdown,
     openxlsx,
     pkgdown
-URL: https://github.com/robcareta/JPselect, https://robcareta.github.io/JPselect/
-BugReports: https://github.com/robcareta/JPselect/issues
+URL: https://github.com/robcareta/JPselection, https://robcareta.github.io/JPselection/
+BugReports: https://github.com/robcareta/JPselection/issues
 VignetteBuilder: knitr

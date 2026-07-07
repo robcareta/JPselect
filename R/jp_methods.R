@@ -316,7 +316,7 @@ print.jpcompare <- function(x, digits = 3, ...) {
   }
 
   cat(strrep("=", 70), "\n", sep = "")
-  cat("JPselect: comparison of functional-form specifications\n")
+  cat("JPselection: comparison of functional-form specifications\n")
   cat(strrep("=", 70), "\n", sep = "")
   cat(sprintf("%d combinations fitted on n = %d selected farms.\n\n",
               nrow(s), s$n_selected[1]))

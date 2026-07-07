@@ -1,3 +1,3 @@
 library(testthat)
-library(JPselect)
-test_check("JPselect")
+library(JPselection)
+test_check("JPselection")
