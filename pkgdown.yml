@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   getting-started: getting-started.html
   methodology: methodology.html
-last_built: 2026-07-04T14:35Z
+last_built: 2026-07-07T19:48Z
 urls:
-  reference: https://robcareta.github.io/JPselect/reference
-  article: https://robcareta.github.io/JPselect/articles
+  reference: https://robcareta.github.io/JPselection/reference
+  article: https://robcareta.github.io/JPselection/articles

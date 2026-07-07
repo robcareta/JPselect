@@ -8,18 +8,18 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/robcareta/JPselect/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/robcareta/JPselection/blob/main/inst/CITATION)
 
-Cardenas Retamal R (2026). *JPselect: Just-Pope Production Functions
-with Heckman Selectivity Correction*. R package version 0.1.0,
-<https://github.com/YOUR_GITHUB_USERNAME/JPselect>.
+Cardenas Retamal R (2026). *JPselection: Just-Pope Production Functions
+with Heckman Selectivity Correction*. R package version 0.2.0,
+<https://github.com/robcareta/JPselection>.
 
     @Manual{,
-      title = {JPselect: Just-Pope Production Functions with Heckman Selectivity Correction},
+      title = {JPselection: Just-Pope Production Functions with Heckman Selectivity Correction},
       author = {Roberto {Cardenas Retamal}},
       year = {2026},
-      note = {R package version 0.1.0},
-      url = {https://github.com/YOUR_GITHUB_USERNAME/JPselect},
+      note = {R package version 0.2.0},
+      url = {https://github.com/robcareta/JPselection},
     }
 
 Koundouri P, Nauges C (2005). “On Production Function Estimation with

@@ -50,9 +50,9 @@ coefficients consistent.
 
 | Step | What is estimated | Function |
 |----|----|----|
-| 1 | Probit on $`D_l`$, then compute $`M_l`$ | [`estimate_selection()`](https://robcareta.github.io/JPselect/reference/estimate_selection.md) |
-| 2 | Mean fn: $`y_l = f(\mathbf{x},\boldsymbol{\beta}_l) + \sigma_l M_l + w_l`$ with $`f`$ linear-quadratic | [`estimate_mean_function()`](https://robcareta.github.io/JPselect/reference/estimate_mean_function.md) |
-| 3 | Risk fn via $`\log\|\hat w_l\| = \xi_0 + \sum_j \xi_j \log x_j + \log\eta_l`$ (Cobb-Douglas $`h`$) | [`estimate_risk_function()`](https://robcareta.github.io/JPselect/reference/estimate_risk_function.md) |
+| 1 | Probit on $`D_l`$, then compute $`M_l`$ | [`estimate_selection()`](https://robcareta.github.io/JPselection/reference/estimate_selection.md) |
+| 2 | Mean fn: $`y_l = f(\mathbf{x},\boldsymbol{\beta}_l) + \sigma_l M_l + w_l`$ with $`f`$ linear-quadratic | [`estimate_mean_function()`](https://robcareta.github.io/JPselection/reference/estimate_mean_function.md) |
+| 3 | Risk fn via $`\log\|\hat w_l\| = \xi_0 + \sum_j \xi_j \log x_j + \log\eta_l`$ (Cobb-Douglas $`h`$) | [`estimate_risk_function()`](https://robcareta.github.io/JPselection/reference/estimate_risk_function.md) |
 
 Step 2 fits the **linear-quadratic mean function**
 
@@ -93,7 +93,7 @@ fit_cd <- jp_fit(..., mean_form = "cobb_douglas")
 Some applications need to handle **zero-valued inputs** (e.g. farms that
 report no pesticide use), which the Cobb-Douglas form cannot because it
 requires $`\log(x_j)`$.
-[`jp_fit()`](https://robcareta.github.io/JPselect/reference/jp_fit.md)
+[`jp_fit()`](https://robcareta.github.io/JPselection/reference/jp_fit.md)
 therefore accepts `risk_form = "exponential"`, fitting
 
 ``` math
@@ -122,7 +122,7 @@ or `risk_form = "translog"` raises an informative error.
 
 Functional form is a research-design choice, not a property of the data.
 To see how sensitive the conclusion is, use
-[`jp_compare()`](https://robcareta.github.io/JPselect/reference/jp_compare.md):
+[`jp_compare()`](https://robcareta.github.io/JPselection/reference/jp_compare.md):
 
 ``` r
 

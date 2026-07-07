@@ -1,17 +1,18 @@
-# Getting started with JPselect
+# Getting started with JPselection
 
-This vignette walks through the full JPselect pipeline on the built-in
-synthetic dataset. The dataset roughly mimics the 239-farm Cyprus sample
-in Table 1 of Koundouri & Nauges (2005); it is intended for methodology
-demonstrations, **not** to reproduce the paper’s exact point estimates.
-To use real data, pass any data frame with the appropriate columns to
-[`jp_fit()`](https://robcareta.github.io/JPselect/reference/jp_fit.md).
+This vignette walks through the full JPselection pipeline on the
+built-in synthetic dataset. The dataset roughly mimics the 239-farm
+Cyprus sample in Table 1 of Koundouri & Nauges (2005); it is intended
+for methodology demonstrations, **not** to reproduce the paper’s exact
+point estimates. To use real data, pass any data frame with the
+appropriate columns to
+[`jp_fit()`](https://robcareta.github.io/JPselection/reference/jp_fit.md).
 
 ## Fit the model
 
 ``` r
 
-library(JPselect)
+library(JPselection)
 
 # Synthetic 239-farm dataset mimicking the paper's Cyprus sample
 farms <- simulate_kiti_data(seed = 42)
@@ -163,5 +164,5 @@ and cereals groups from the paper and saves coefficient plots to
 ``` r
 
 source(system.file("examples", "replicate_koundouri_2005.R",
-                   package = "JPselect"))
+                   package = "JPselection"))
 ```

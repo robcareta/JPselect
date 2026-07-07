@@ -48,7 +48,7 @@ SharePoint widget and must be downloaded manually\*\* from
 ``` r
 caf2021_docs("dictionary")
 #> Warning: Some bundled docs are missing: methodology, questionnaire
-#> [1] "/home/runner/work/_temp/Library/JPselect/extdata/caf2021_dictionary.xlsx"
+#> [1] "/home/runner/work/_temp/Library/JPselection/extdata/caf2021_dictionary.xlsx"
 if (FALSE) { # \dontrun{
 # Open the variable dictionary in Excel
 shell.exec(caf2021_docs("dictionary"))

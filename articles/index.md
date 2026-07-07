@@ -3,6 +3,6 @@
 ### All vignettes
 
 - [Getting started with
-  JPselect](https://robcareta.github.io/JPselect/articles/getting-started.md):
+  JPselection](https://robcareta.github.io/JPselection/articles/getting-started.md):
 - [Methodology: Just-Pope with Heckman
-  correction](https://robcareta.github.io/JPselect/articles/methodology.md):
+  correction](https://robcareta.github.io/JPselection/articles/methodology.md):
