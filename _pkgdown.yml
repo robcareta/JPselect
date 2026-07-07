@@ -1,18 +1,18 @@
-url: https://robcareta.github.io/JPselect/
+url: https://robcareta.github.io/JPselection/
 
 template:
   bootstrap: 5
   bootswatch: flatly
 
 home:
-  title: "JPselect: Just-Pope Production Functions with Heckman Selectivity"
+  title: "JPselection: Just-Pope Production Functions with Heckman Selectivity"
   description: >
     Three-step estimation of Just-Pope stochastic production functions with
     sample-selection correction. Runs the corrected and uncorrected specifications
     side by side so the bias in risk-function coefficients is visible directly.
   links:
   - text: Report an issue
-    href: https://github.com/robcareta/JPselect/issues
+    href: https://github.com/robcareta/JPselection/issues
 
 navbar:
   structure:
@@ -25,7 +25,7 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: Getting started with JPselect
+      - text: Getting started with JPselection
         href: articles/getting-started.html
       - text: "Methodology: Just-Pope with Heckman correction"
         href: articles/methodology.html
@@ -33,7 +33,7 @@ navbar:
 reference:
 - title: Package overview
   contents:
-  - JPselect-package
+  - JPselection-package
 
 - title: Full pipeline
   desc: Wrappers for the complete three-step procedure with vs. without selectivity correction.
